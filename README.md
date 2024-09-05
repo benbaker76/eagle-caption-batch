@@ -29,4 +29,4 @@ To use CUDA / GPU speed captioning, you'll need ~6GB VRAM or more.
 This runs captioning on all images in the /input/-folder.
 
 ## Credits
-Thanks to [MNeMoNiCuZ](https://github.com/MNeMoNiCuZ0) for the original script upon which this one is based, and [Gökay Aydoğan](https://huggingface.co/gokaygokay) for additional script support.
+Thanks to [MNeMoNiCuZ](https://github.com/MNeMoNiCuZ) for the original script upon which this one is based, and [Gökay Aydoğan](https://huggingface.co/gokaygokay) for additional script support.
