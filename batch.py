@@ -23,8 +23,10 @@ OUTPUT_KEYWORDS = False  # Option to control whether to output comma-delimited k
 
 PROMPT_NORMAL = 'Describe this image.'
 PROMPT_KEYWORDS = 'List up to 10 of the most important, distinct, and descriptive elements in this image as keywords. Focus on key objects, scenery, colors, and relevant visual features. Do not include any numbers or repeated words.'
+
 #MODEL_PATH = 'NVEagle/Eagle-X5-13B-Chat'
 MODEL_PATH = 'NVEagle/Eagle-X5-7B'
+CONV_MODE = "vicuna_v1"
 
 # Load the model
 def download_and_load_model():
@@ -80,6 +82,11 @@ def run_model_batch(image_paths, model, tokenizer, image_processor):
     else:
         input_prompt = DEFAULT_IMAGE_TOKEN + '\n' + input_prompt
     
+    conv = conv_templates[CONV_MODE].copy()
+    conv.append_message(conv.roles[0], input_prompt)
+    conv.append_message(conv.roles[1], None)
+    prompt = conv.get_prompt()
+    
     inputs = []
     for image_path in image_paths:
         if PRINT_PROCESSING_STATUS:
@@ -87,7 +94,7 @@ def run_model_batch(image_paths, model, tokenizer, image_processor):
         with Image.open(image_path).convert("RGB") as img:
             inputs.append(process_images([img], image_processor, model.config)[0])
 
-    input_ids = tokenizer_image_token(input_prompt, tokenizer, IMAGE_TOKEN_INDEX, return_tensors='pt')
+    input_ids = tokenizer_image_token(prompt, tokenizer, IMAGE_TOKEN_INDEX, return_tensors='pt')
     input_ids = input_ids.to(device)
     image_tensors = torch.cat([img.unsqueeze(0) for img in inputs]).to(dtype=torch.float16, device=device, non_blocking=True)
 
@@ -100,7 +107,7 @@ def run_model_batch(image_paths, model, tokenizer, image_processor):
             temperature=0.2,
             top_p=0.5,
             num_beams=1,
-            max_new_tokens=1024,
+            max_new_tokens=256,
             use_cache=False
         )
 
