@@ -1,0 +1,11 @@
+timm==0.9.11
+transformers==4.37.2
+einops==0.6.1
+tqdm
+huggingface_hub
+pillow
+fvcore
+scipy
+sentencepiece==0.1.99
+protobuf==3.20.0
+accelerate==0.21.0
