@@ -107,7 +107,7 @@ def run_model_batch(image_paths, model, tokenizer, image_processor):
             temperature=0.2,
             top_p=0.5,
             num_beams=1,
-            max_new_tokens=256,
+            max_new_tokens=512,
             use_cache=False
         )
 
