@@ -100,7 +100,7 @@ def run_model_batch(image_paths, model, tokenizer, image_processor):
 
     with torch.no_grad():
         output_ids = model.generate(
-            input_ids.unsqueeze(0),
+            input_ids.repeat(len(inputs), 1),
             images=image_tensors,
             image_sizes=[img.size for img in inputs],
             do_sample=True,
@@ -134,11 +134,10 @@ def process_images_recursive(paths, model, tokenizer, image_processor, batch_siz
         batch = path_list[i*batch_size:(i+1)*batch_size]
         captions = run_model_batch(batch, model, tokenizer, image_processor)
         for path, caption in zip(batch, captions):
-            # Ensure we clean and format caption here before writing to the file
-            caption = f"{PREPEND_STRING}{caption}{APPEND_STRING}"
+            caption_file = path.with_suffix('.txt')
             if PRINT_CAPTIONS:
                 print(f"Caption for {path}: {caption}")
-            path.with_suffix('.txt').write_text(caption)
+            caption_file.write_text(caption)
             total_images += 1
 
     total_time = time.time() - start_time
